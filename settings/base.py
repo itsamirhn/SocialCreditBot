@@ -5,10 +5,10 @@ DEBUG = True
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-BOT_TOKEN = 'TOKEN'
+BOT_TOKEN = os.environ.get('TOKEN')
 
-SUPER_ADMIN_ID = 0
+SUPER_ADMIN_ID = int(os.environ.get('SUPER_ADMIN_ID', 0))
 
 PORT = int(os.environ.get('PORT', 8443))
 
-WEBHOOK_URL = 'https://yourherokuappname.herokuapp.com/' + BOT_TOKEN
+WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
