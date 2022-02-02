@@ -1,7 +1,7 @@
 import logging
 import os
 
-DEBUG = True
+DEBUG = False
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
