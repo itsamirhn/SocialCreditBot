@@ -175,4 +175,3 @@ dmypy.json
 cython_debug/
 
 /SocialCreditBot
-/settings/__init__.py
