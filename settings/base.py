@@ -9,6 +9,6 @@ BOT_TOKEN = 'TOKEN'
 
 SUPER_ADMIN_ID = 0
 
-PORT = int(os.environ.get('PORT', 5000))
+PORT = int(os.environ.get('PORT', 8443))
 
 WEBHOOK_URL = 'https://yourherokuappname.herokuapp.com/' + BOT_TOKEN

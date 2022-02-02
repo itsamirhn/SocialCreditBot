@@ -200,8 +200,7 @@ def main() -> None:
     if DEBUG:
         updater.start_polling()
     else:
-        updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=BOT_TOKEN)
-        updater.bot.setWebhook(WEBHOOK_URL)
+        updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=BOT_TOKEN, webhook_url=WEBHOOK_URL)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
