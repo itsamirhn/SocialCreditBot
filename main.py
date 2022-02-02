@@ -170,6 +170,10 @@ def battle_command(update: Update, context: CallbackContext) -> None:
             'battle.')
 
 
+def error(update, context):
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
+
+
 def main() -> None:
 
     persistence = PicklePersistence(filename='SocialCreditBot')
@@ -194,8 +198,7 @@ def main() -> None:
     ))
     dispatcher.add_handler(MessageHandler(Filters.chat_type.private, private_message))
 
-    # Start the Bot
-    updater.start_polling()
+    dispatcher.add_error_handler(error)
 
     if DEBUG:
         logger.info(f"Start Polling...")
