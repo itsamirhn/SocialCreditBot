@@ -2,7 +2,7 @@ import logging
 from telegram import Update, Chat
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, PicklePersistence
 
-from settings import BOT_TOKEN, SUPER_ADMIN_ID
+from settings import BOT_TOKEN, SUPER_ADMIN_ID, DEBUG, PORT, WEBHOOK_URL
 
 logger = logging.getLogger(__name__)
 
@@ -196,6 +196,12 @@ def main() -> None:
 
     # Start the Bot
     updater.start_polling()
+
+    if DEBUG:
+        updater.start_polling()
+    else:
+        updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=BOT_TOKEN)
+        updater.bot.setWebhook(WEBHOOK_URL)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
