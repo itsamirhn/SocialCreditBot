@@ -83,7 +83,7 @@ def credits_command(update: Update, context: CallbackContext) -> None:
         return
     user = message.reply_to_message.from_user
     if user.id == context.bot.id:
-        message.reply_text("How you dare?")
+        message.reply_text("How dare you?")
         return
     context.chat_data.setdefault(user.id, {'name': user.first_name, 'points': 0})
     points = context.chat_data[user.id]['points']
