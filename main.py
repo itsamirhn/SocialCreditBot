@@ -43,7 +43,7 @@ def credit_message(update: Update, context: CallbackContext) -> None:
         else:
             points = len(context.match.group(1) + context.match.group(2))
         if user.id != SUPER_ADMIN_ID:
-            points = max(points, 10)
+            points = min(points, 10)
         points = value * points
         credit_dic.setdefault(user.id, {'name': user.first_name, 'points': 0})
         if message.from_user.id == user.id:

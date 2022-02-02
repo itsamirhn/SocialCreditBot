@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DEBUG = os.environ.get('DEBUG', 'True') != 'False'
+DEBUG = os.environ.get('DEBUG', 'False').lower() != 'False'.lower()
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
