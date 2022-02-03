@@ -193,7 +193,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler('battle', battle_command, filters=Filters.chat_type.groups))
 
     dispatcher.add_handler(MessageHandler(
-        Filters.text & ~Filters.command & Filters.reply & Filters.regex(r'^([+-])(\1*)(\d*)$') & Filters.chat_type.groups,
+        Filters.text & ~Filters.command & Filters.reply & Filters.regex(r'^([+-])(\1*)(\d*)') & Filters.chat_type.groups,
         credit_message
     ))
     dispatcher.add_handler(MessageHandler(Filters.chat_type.private, private_message))
