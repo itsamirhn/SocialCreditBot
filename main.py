@@ -46,7 +46,7 @@ def credit_message(update: Update, context: CallbackContext) -> None:
             points = min(points, 10)
         points = value * points
         credit_dic.setdefault(user.id, {'name': user.first_name, 'points': 0})
-        if message.from_user.id == user.id:
+        if message.from_user.id != SUPER_ADMIN_ID and message.from_user.id == user.id:
             if points > 0:
                 text = "Do You think you are smart? Idiot.\nYou can't credit to yourself."
             else:
