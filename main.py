@@ -151,6 +151,7 @@ def battle_command(update: Update, context: CallbackContext) -> None:
         for key, value in context.chat_data['battle'].items():
             if type(key) is int:
                 leaderboard.append((value['points'], value['name']))
+        leaderboard.sort(reverse=True)
         if len(leaderboard) > 0:
             text = 'Battle Finished.\n\nLeaderboard:\n'
             for row in leaderboard:
