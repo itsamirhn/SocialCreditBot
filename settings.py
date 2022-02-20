@@ -15,3 +15,8 @@ SUPER_ADMIN_ID = int(os.environ.get('SUPER_ADMIN_ID', 0))
 PORT = int(os.environ.get('PORT', 8443))
 
 WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
+
+try:
+    BLACKLIST_ID = [int(i) for i in os.environ.get("BLACKLIST_ID").split(' ')]
+except:
+    BLACKLIST_ID = []

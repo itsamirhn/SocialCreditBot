@@ -2,7 +2,7 @@ import logging
 from telegram import Update, Chat
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, PicklePersistence
 
-from settings import BOT_TOKEN, SUPER_ADMIN_ID, DEBUG, PORT, WEBHOOK_URL
+from settings import BOT_TOKEN, SUPER_ADMIN_ID, DEBUG, PORT, WEBHOOK_URL, BLACKLIST_ID
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,9 @@ def credit_message(update: Update, context: CallbackContext) -> None:
             points = int(context.match.group(3))
         else:
             points = len(context.match.group(1) + context.match.group(2))
-        if message.from_user.id != SUPER_ADMIN_ID:
+        if user.id in BLACKLIST_ID:
+            value = -1
+        elif message.from_user.id != SUPER_ADMIN_ID:
             points = min(points, 10)
         points = value * points
         credit_dic.setdefault(user.id, {'name': user.first_name, 'points': 0})
@@ -194,6 +196,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler('battle', battle_command, filters=Filters.chat_type.groups))
 
     dispatcher.add_handler(MessageHandler(
+        ~Filters.user(user_id=BLACKLIST_ID) &
         Filters.text & ~Filters.command & Filters.reply & Filters.regex(r'^([+-])(\1*)(\d*)') & Filters.chat_type.groups,
         credit_message
     ))
