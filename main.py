@@ -208,7 +208,7 @@ def main() -> None:
         logger.info(f"Start Polling...")
         updater.start_polling()
     else:
-        logger.info(f"Webhook on port:{PORT}")
+        logger.info(f"Webhook on port: 5000")
         updater.start_webhook(listen="0.0.0.0", port=5000, url_path=BOT_TOKEN, webhook_url=WEBHOOK_URL + BOT_TOKEN)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
