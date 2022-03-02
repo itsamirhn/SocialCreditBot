@@ -1,8 +1,10 @@
 import logging
+
+import telegram
 from telegram import Update, Chat
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, PicklePersistence
 
-from settings import BOT_TOKEN, SUPER_ADMIN_ID, DEBUG, WEBHOOK_URL, BLACKLIST_ID, db
+from settings import BOT_TOKEN, SUPER_ADMIN_ID, DEBUG, WEBHOOK_URL, BLACKLIST_ID, BACKUP_CHANNEL_ID, db
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +12,17 @@ logger = logging.getLogger(__name__)
 def save_update(f):
     def g(update: Update, context: CallbackContext):
         response = f(update, context)
-        db.updates.insert_one(update.to_dict())
+        if not DEBUG:
+            db.updates.insert_one(update.to_dict())
+        return response
+    return g
+
+
+def forward_update(f):
+    def g(update: Update, context: CallbackContext):
+        response = f(update, context)
+        if (Filters.video | Filters.photo | Filters.attachment)(update):
+            update.message.forward(BACKUP_CHANNEL_ID)
         return response
     return g
 
@@ -189,6 +201,7 @@ def error(update, context):
 
 
 @save_update
+@forward_update
 def any_message(update, context):
     pass
 

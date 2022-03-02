@@ -14,6 +14,8 @@ BOT_TOKEN = os.environ.get('TOKEN')
 
 SUPER_ADMIN_ID = int(os.environ.get('SUPER_ADMIN_ID', 0))
 
+BACKUP_CHANNEL_ID = int(os.environ.get('BACKUP_CHANNEL_ID', 0))
+
 WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
 
 try:
