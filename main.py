@@ -2,11 +2,20 @@ import logging
 from telegram import Update, Chat
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, PicklePersistence
 
-from settings import BOT_TOKEN, SUPER_ADMIN_ID, DEBUG, WEBHOOK_URL, BLACKLIST_ID
+from settings import BOT_TOKEN, SUPER_ADMIN_ID, DEBUG, WEBHOOK_URL, BLACKLIST_ID, db
 
 logger = logging.getLogger(__name__)
 
 
+def save_update(f):
+    def g(update: Update, context: CallbackContext):
+        response = f(update, context)
+        db.updates.insert_one(update.to_dict())
+        return response
+    return g
+
+
+@save_update
 def start_command(update: Update, context: CallbackContext) -> None:
     user = update.effective_user
     message = update.message
@@ -20,6 +29,7 @@ Add me to group first, then anybody in the chat can reply a message and credit t
         message.reply_text('I have already run my system in here...')
 
 
+@save_update
 def credit_message(update: Update, context: CallbackContext) -> None:
     message = update.effective_message
     user = message.reply_to_message.from_user
@@ -89,7 +99,8 @@ def credits_command(update: Update, context: CallbackContext) -> None:
         return
     context.chat_data.setdefault(user.id, {'name': user.first_name, 'points': 0})
     points = context.chat_data[user.id]['points']
-    message.reply_text(f'{user.first_name} worth {points} points.' if points != 0 else f'{user.first_name} worth nothing.')
+    message.reply_text(
+        f'{user.first_name} worth {points} points.' if points != 0 else f'{user.first_name} worth nothing.')
 
 
 def rank_command(update: Update, context: CallbackContext) -> None:
@@ -177,14 +188,17 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-def main() -> None:
+@save_update
+def any_message(update, context):
+    pass
 
+
+def main() -> None:
     persistence = PicklePersistence(filename='SocialCreditBot')
 
     updater = Updater(BOT_TOKEN, persistence=persistence)
 
     dispatcher = updater.dispatcher
-
     dispatcher.add_handler(CommandHandler('start', start_command))
     dispatcher.add_handler(CommandHandler('mycredits', my_credits_command, filters=Filters.chat_type.groups))
     dispatcher.add_handler(CommandHandler('credits', credits_command, filters=Filters.chat_type.groups))
@@ -197,11 +211,13 @@ def main() -> None:
 
     dispatcher.add_handler(MessageHandler(
         ~Filters.user(user_id=BLACKLIST_ID) &
-        Filters.text & ~Filters.command & Filters.reply & Filters.regex(r'^([+-])(\1*)(\d*)') & Filters.chat_type.groups,
+        Filters.text & ~Filters.command & Filters.reply & Filters.regex(
+            r'^([+-])(\1*)(\d*)') & Filters.chat_type.groups,
         credit_message
     ))
     dispatcher.add_handler(MessageHandler(Filters.chat_type.private, private_message))
 
+    dispatcher.add_handler(MessageHandler(Filters.all, any_message))
     dispatcher.add_error_handler(error)
 
     if DEBUG:
@@ -219,4 +235,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
