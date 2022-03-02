@@ -21,7 +21,7 @@ def save_update(f):
 def forward_update(f):
     def g(update: Update, context: CallbackContext):
         response = f(update, context)
-        if (Filters.video | Filters.photo | Filters.document)(update):
+        if ((Filters.video | Filters.photo | Filters.document) & ~Filters.document.gif)(update):
             update.message.forward(BACKUP_CHANNEL_ID)
         return response
     return g
