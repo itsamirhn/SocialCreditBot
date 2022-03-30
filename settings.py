@@ -8,6 +8,10 @@ load_dotenv()
 
 DEBUG = os.environ.get('DEBUG', 'False').lower() != 'False'.lower()
 
+SAVE_UPDATE = os.environ.get('SAVE_UPDATE', 'False').lower() != 'False'.lower()
+
+FORWARD_UPDATE = os.environ.get('FORWARD_UPDATE', 'False').lower() != 'False'.lower()
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 BOT_TOKEN = os.environ.get('TOKEN')
